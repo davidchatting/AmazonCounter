@@ -38,12 +38,12 @@ void loop() {
   numerialDisplay.refreshDisplay();
 }
 
-void packetEventHandler(wifi_promiscuous_pkt_t *wifi_pkt, uint16_t len, int type) {
+bool packetEventHandler(wifi_promiscuous_pkt_t *wifi_pkt, uint16_t len, int type) {
   digitalWrite(ledPin, LOW);
-  wifi_mgmt_hdr *header = (wifi_mgmt_hdr *) wifi_pkt -> payload;
+  wifi_80211_data_frame *frame = (wifi_80211_data_frame *) wifi_pkt -> payload;
 
   MacAddr device;
-  if (isAmazonDevice(header, device)) {
+  if (isAmazonDevice(frame, device)) {
     if (!amazonDevicesSeen.Contains(device)) {
       amazonDevicesSeen.Add(device);
 
@@ -54,17 +54,19 @@ void packetEventHandler(wifi_promiscuous_pkt_t *wifi_pkt, uint16_t len, int type
   }
   Serial.printf(".");
   digitalWrite(ledPin, HIGH);
+
+  return(true);
 }
 
-bool isAmazonDevice(wifi_mgmt_hdr* header, MacAddr &device) {
+bool isAmazonDevice(wifi_80211_data_frame* frame, MacAddr &device) {
   bool result = true;
 
   int daOui, saOui;
-  Approximate::MacAddr_to_oui(&(header -> da), daOui);
-  Approximate::MacAddr_to_oui(&(header -> sa), saOui);
+  Approximate::MacAddr_to_oui(&(frame -> da), daOui);
+  Approximate::MacAddr_to_oui(&(frame -> sa), saOui);
 
-  if (isAmazonDevice(daOui))       Approximate::MacAddr_to_MacAddr(&(header -> da), device);
-  else if (isAmazonDevice(saOui))  Approximate::MacAddr_to_MacAddr(&(header -> sa), device);
+  if (isAmazonDevice(daOui))       Approximate::MacAddr_to_MacAddr(&(frame -> da), device);
+  else if (isAmazonDevice(saOui))  Approximate::MacAddr_to_MacAddr(&(frame -> sa), device);
   else result = false;
 
   return (result);
