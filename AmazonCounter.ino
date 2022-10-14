@@ -1,5 +1,3 @@
-#include <Approximate.h>
-
 #include <Approximate.h>  //https://github.com/davidchatting/Approximate
 #include <SevSeg.h>       //https://github.com/DeanIsMe/SevSeg
 
