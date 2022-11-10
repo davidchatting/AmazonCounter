@@ -14,14 +14,14 @@ jobs:
       with:
         repository: davidchatting/Approximate
         ref: master
-        path: CustomListLib
+        path: CustomApproximate
 
     - name: Checkout SevSeg
       uses: actions/checkout@v2
       with:
         repository: DeanIsMe/SevSeg
         ref: master
-        path: CustomListLib
+        path: CustomSevSeg
 
     - name: Compile all examples
       uses: ArminJo/arduino-test-compile@master
