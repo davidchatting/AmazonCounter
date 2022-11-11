@@ -15,6 +15,13 @@ jobs:
         repository: davidchatting/Approximate
         ref: master
         path: CustomApproximate
+        
+    - name: Checkout Arduino-List
+      uses: actions/checkout@v2
+      with:
+        repository: davidchatting/Arduino-List
+        ref: master
+        path: CustomListLib
 
     - name: Checkout SevSeg
       uses: actions/checkout@v2
